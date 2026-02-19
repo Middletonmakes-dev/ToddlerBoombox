@@ -26,6 +26,9 @@ void loadPlaylist() {
   while (file) {
     if (!file.isDirectory()) {
       String filename = String(file.name());
+      int slash = filename.lastIndexOf('/');
+      if (slash >= 0) filename = filename.substring(slash + 1);
+
       if (isMp3Name(filename)) {
         if (totalTracks < MAX_TRACKS) {
           playlist[totalTracks] = String(MUSIC_FOLDER) + "/" + filename;
@@ -63,6 +66,9 @@ void loadSFXList() {
   while (file) {
     if (!file.isDirectory()) {
       String filename = String(file.name());
+      int slash = filename.lastIndexOf('/');
+      if (slash >= 0) filename = filename.substring(slash + 1);
+
       if (isMp3Name(filename)) {
         if (totalSFX < MAX_SFX) {
           sfxList[totalSFX] = String(SFX_FOLDER) + "/" + filename;

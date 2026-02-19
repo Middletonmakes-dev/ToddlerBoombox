@@ -21,6 +21,7 @@
 #include "BluetoothA2DPSink.h"   // ESP32-A2DP library
 #include <WiFi.h>
 #include <WebServer.h>
+#include "esp_system.h" // esp_random()
 
 // ========================================
 // PIN DEFINITIONS
@@ -101,6 +102,9 @@ const unsigned long DEBOUNCE_DELAY = 300;
 // BT play state (for toggle)
 bool btIsPlaying = false;
 
+// Prevent "same song" behavior when random mode is used
+bool randomSeeded = false;
+
 // ========================================
 // FORWARD DECLARATIONS
 // ========================================
@@ -138,6 +142,12 @@ void setup() {
   initPins();
   delay(150);
 
+  if (!randomSeeded) {
+    randomSeed(esp_random());
+    randomSeeded = true;
+    Serial.println("Random generator seeded");
+  }
+
   // --- Detect boot mode from held buttons ---
   if (digitalRead(BTN_SHUFFLE) == LOW) {
     currentMode = MODE_WIFI;
@@ -173,7 +183,8 @@ void setup() {
   initAudio();
 
   if (totalTracks > 0) {
-    playTrack(0);
+    currentTrack = random(0, totalTracks);
+    playTrack(currentTrack);
   } else {
     Serial.println("No MP3 files found in /Music");
   }
