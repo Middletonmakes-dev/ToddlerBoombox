@@ -6,7 +6,7 @@
 #include <WebServer.h>
 #include <SD.h>
 
-#include "WebPage.h"   // UI stored in PROGMEM
+#include "webpage.h"   // UI stored in PROGMEM
 
 // Upload bookkeeping
 static File uploadFile;

@@ -50,12 +50,18 @@ void toggleShuffle() {
   if (shuffleMode) {
     Serial.println("Shuffle ON");
     shufflePlaylist();
-    currentTrack = 0;
-    playTrack(currentTrack);
+
+    if (totalTracks > 0) {
+      currentTrack = random(0, totalTracks);
+      playTrack(currentTrack);
+    }
   } else {
     Serial.println("Shuffle OFF");
     loadPlaylist();
-    currentTrack = 0;
-    playTrack(currentTrack);
+
+    if (totalTracks > 0) {
+      currentTrack = 0;
+      playTrack(currentTrack);
+    }
   }
 }

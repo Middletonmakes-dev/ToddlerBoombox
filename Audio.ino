@@ -23,7 +23,17 @@ void playNextTrack() {
   if (totalTracks == 0) return;
 
   isPaused = false;
-  currentTrack = (currentTrack + 1) % totalTracks;
+
+  if (shuffleMode && totalTracks > 1) {
+    int nextTrack = currentTrack;
+    while (nextTrack == currentTrack) {
+      nextTrack = random(0, totalTracks);
+    }
+    currentTrack = nextTrack;
+  } else {
+    currentTrack = (currentTrack + 1) % totalTracks;
+  }
+
   playTrack(currentTrack);
 }
 
@@ -31,7 +41,17 @@ void playPreviousTrack() {
   if (totalTracks == 0) return;
 
   isPaused = false;
-  currentTrack = (currentTrack - 1 + totalTracks) % totalTracks;
+
+  if (shuffleMode && totalTracks > 1) {
+    int prevTrack = currentTrack;
+    while (prevTrack == currentTrack) {
+      prevTrack = random(0, totalTracks);
+    }
+    currentTrack = prevTrack;
+  } else {
+    currentTrack = (currentTrack - 1 + totalTracks) % totalTracks;
+  }
+
   playTrack(currentTrack);
 }
 

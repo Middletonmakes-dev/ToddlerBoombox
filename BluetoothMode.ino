@@ -41,12 +41,15 @@ void bt_connection_state(esp_a2d_connection_state_t state, void *ptr) {
 void bt_audio_state(esp_a2d_audio_state_t state, void *ptr) {
   switch (state) {
     case ESP_A2D_AUDIO_STATE_REMOTE_SUSPEND:
+      btIsPlaying = false;
       Serial.println("BT: Audio suspended by phone");
       break;
     case ESP_A2D_AUDIO_STATE_STOPPED:
+      btIsPlaying = false;
       Serial.println("BT: Audio stopped");
       break;
     case ESP_A2D_AUDIO_STATE_STARTED:
+      btIsPlaying = true;
       Serial.println("BT: Audio streaming started <<< you should hear sound now");
       break;
   }
@@ -99,7 +102,9 @@ void startBluetoothMode() {
   // Start BT
   a2dp_sink->start(BT_NAME);
 
-  btIsPlaying = true;
+  // Track real play state from bt_audio_state() callback.
+  // Start false so first PLAY button press sends AVRCP play.
+  btIsPlaying = false;
 
   Serial.println("Bluetooth ready. Pair from phone.");
   Serial.println("Watch serial monitor for connection state changes.");
@@ -118,12 +123,10 @@ void handleButtonsBT() {
 
     if (btIsPlaying) {
       a2dp_sink->pause();
-      btIsPlaying = false;
-      Serial.println("BT: Pause");
+      Serial.println("BT: Pause requested");
     } else {
       a2dp_sink->play();
-      btIsPlaying = true;
-      Serial.println("BT: Play");
+      Serial.println("BT: Play requested");
     }
 
     delay(30);
